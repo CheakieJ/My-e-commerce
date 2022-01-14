@@ -5,13 +5,14 @@
         v-for="(item, i) in dataList"
         :key="i"
         :title="typeof item === 'number' ? '全部' : item"
-        @touchend="moveTo(i)"
+        @click="moveTo(i)"
       />
     </van-sidebar>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -19,8 +20,14 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["getGoodsList"]),
     moveTo(i) {
-      this.index = i;
+      this.getGoodsList({
+        type: this.dataList[i],
+        page: 1,
+        size: this.$store.state.size,
+        sort: "all",
+      });
     },
   },
   computed: {
@@ -29,17 +36,26 @@ export default {
       return this.$store.state.sideList;
     },
   },
+  mounted() {
+    this.getGoodsList({
+      type: 2,
+      page: 1,
+      size: this.$store.state.size,
+      sort: "all",
+    });
+  },
 };
 </script>
 
 <style lang="less">
 .sideNav-container {
+  position: fixed;
+  left: 0;
+  top: 150px;
+  bottom: 50px;
+  overflow: auto;
+  width: 79px;
   .van-sidebar {
-    position: fixed;
-    left: 0;
-    top: 150px;
-    bottom: 50px;
-    overflow: auto;
     .van-sidebar-item--select {
       color: #d13193;
       &::before {

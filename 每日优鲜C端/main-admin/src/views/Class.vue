@@ -6,16 +6,19 @@
     </div>
     <NavF />
     <SideBar />
+    <CardList />
   </div>
 </template>
 
 <script>
 import NavF from "@/components/NavF.vue";
 import SideBar from "@/components/SideBar.vue";
+import CardList from "@/components/CardList.vue";
 export default {
   components: {
     NavF,
     SideBar,
+    CardList,
   },
 };
 </script>

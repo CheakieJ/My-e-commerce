@@ -8,13 +8,15 @@ export default new Vuex.Store({
   state: {
     sideList: [],
     goodList: [],
+    size: 5,
+    isLoading: false,
   },
   mutations: {
     setList(state, dataList) {
       state.sideList = dataList;
     },
     getGoodsList(state, goodList) {
-      state.goodList = [...state.goodList, goodList];
+      state.goodList = [...state.goodList, ...goodList];
     },
   },
   actions: {
@@ -23,7 +25,8 @@ export default new Vuex.Store({
       ctx.commit("setList", res);
     },
     async getGoodsList(ctx, goodList) {
-      const res = await api.getGoodsList();
+      const { list } = await api.getGoodsList(goodList);
+      ctx.commit("getGoodsList", list);
     },
   },
 
