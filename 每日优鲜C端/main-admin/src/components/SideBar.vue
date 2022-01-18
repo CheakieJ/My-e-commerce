@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -20,8 +20,13 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["resetGoodsList"]),
     ...mapActions(["getGoodsList"]),
     moveTo(i) {
+      this.$store.state.finished = false;
+      this.$store.state.page = 1;
+      this.$store.state.loading = false;
+      this.resetGoodsList();
       this.getGoodsList({
         type: this.dataList[i],
         page: 1,

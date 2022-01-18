@@ -134,8 +134,9 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["setList"]),
-    moveScroll(i, e) {
+    ...mapMutations(["resetGoodsList", "resetList"]),
+    ...mapActions(["setList", "getGoodsList"]),
+    async moveScroll(i, e) {
       if (this.move) return;
       this.index = i;
       const itemOL = e.target.getBoundingClientRect().left;
@@ -144,7 +145,18 @@ export default {
       const changeDisX = itemOL - wrapperWidth / 2 + itemOW / 2;
       this.moveTo(this.$refs.scroll.scrollLeft, changeDisX);
       //获取二级导航数据
-      this.setList(this.menuList[this.index].title);
+      await this.resetList();
+      await this.setList(this.menuList[this.index].title);
+      this.resetGoodsList();
+      this.getGoodsList({
+        type: this.$store.state.sideList[0],
+        page: 1,
+        size: this.$store.state.size,
+        sort: "all",
+      });
+      this.$store.state.finished = false;
+      this.$store.state.page = 1;
+      this.$store.state.loading = false;
     },
     moveTo(start, end) {
       let dis = 0;

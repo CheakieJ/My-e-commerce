@@ -25,9 +25,10 @@
         success-text="刷新成功"
       >
         <van-list
-          v-model="loading"
-          :finished="finished"
+          v-model="$store.state.loading"
+          :finished="$store.state.finished"
           finished-text="没有更多了"
+          :immediate-check="false"
           @load="onLoad"
         >
           <Card v-for="item in goodList" :key="item.id" v-bind="item" />
@@ -39,7 +40,7 @@
 
 <script>
 import Card from "@/components/Card.vue";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   components: {
     Card,
@@ -48,8 +49,6 @@ export default {
     return {
       type: "all",
       isLoading: false,
-      loading: false,
-      finished: false,
     };
   },
   computed: {
@@ -60,12 +59,35 @@ export default {
 
   methods: {
     ...mapActions(["getGoodsList"]),
-    onRefresh() {
-      console.log(this.goodList);
+    ...mapMutations(["resetGoodsList"]),
+    async onRefresh() {
+      this.resetGoodsList();
+      this.isLoading = true;
+      await this.getGoodsList({
+        type: this.$store.state.sideList[0],
+        page: 1,
+        size: this.$store.state.size,
+        sort: "all",
+      });
       this.isLoading = false;
+      this.$store.state.finished = false;
+      this.$store.state.page = 1;
+      this.$store.state.loading = false;
     },
-    onLoad() {
-      // this.getGoodsList();
+    async onLoad() {
+      this.$store.state.page++;
+      this.$store.state.loading = true;
+      const res = await this.getGoodsList({
+        type: this.$store.state.sideList[0],
+        page: this.$store.state.page,
+        size: this.$store.state.size,
+        sort: "all",
+      });
+      if (res) {
+        this.$store.state.loading = false;
+      } else {
+        this.$store.state.finished = true;
+      }
     },
     changeType(type) {
       if (type == "all") {

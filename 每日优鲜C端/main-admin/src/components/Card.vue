@@ -61,6 +61,12 @@ export default {
         margin-right: 5px;
       }
     }
+    .prices {
+      color: #ff1a90;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
   }
   .over-flow {
     white-space: nowrap;
