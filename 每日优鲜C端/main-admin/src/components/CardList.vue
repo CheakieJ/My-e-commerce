@@ -67,7 +67,7 @@ export default {
         type: this.$store.state.sideList[0],
         page: 1,
         size: this.$store.state.size,
-        sort: "all",
+        sort: this.type,
       });
       this.isLoading = false;
       this.$store.state.finished = false;
@@ -101,6 +101,7 @@ export default {
           this.type = "price-down";
         }
       }
+      this.onRefresh();
     },
   },
 };
